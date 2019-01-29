@@ -168,6 +168,9 @@
     <ClCompile Include="ProbMap.cpp" />
     <ClCompile Include="Funcs.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="example.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

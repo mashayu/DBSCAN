@@ -34,10 +34,11 @@ void normalization(vector <R_t> &R) {  // TODO: check for negative values
 		else
 			break;
 	}
+	vector<R_t>::reverse_iterator riter;
 
-	for (it = R.end()-1; it >= R.begin(); it--) {
-		if (it->A > max_20) {
-			it->A = max_20;
+	for (riter = R.rbegin(); riter != R.rend(); ++riter) {
+		if (riter->A > max_20) {
+			riter->A = max_20;
 		}
 		else 
 			break;
@@ -55,7 +56,7 @@ pair<double, double> get_vehicle_coords(pair<double, double> coords) {  //TODO: 
 	/* code for coords */ 
 
 	double x = coords.first, y = coords.second;
-	return make_pair(x+1, y+1);
+	return make_pair(x+0.1, y+0.1);
 }
 
 void update_coord(vector <R_t> &targets, pair<double, double> coord) {  // TODO: make realistic

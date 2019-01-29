@@ -23,6 +23,7 @@ class ProbMap {
 private:
 	std::vector<R_t2> target_list;
 	int height, width;
+	int grid_height, grid_width;
 	double delta_x_, delta_y_;
 	int targ_num;
 	int mapWidth;
@@ -38,6 +39,8 @@ public:
 	void clean();							//cleans the target list
 
 	void fill_grid();						// places the new targets onto grid
+
+	void print(ofstream& myfile);
 
 	inline double log_prob(R_t2 target); 
 
