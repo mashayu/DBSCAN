@@ -92,3 +92,16 @@ void ProbMap::fill_grid() {
 		cout << gridmap[x][y]<<endl;
 	}
 }
+
+vector<point> ProbMap::make_list_of_points() {
+	vector <point> vect;
+	for (int x = 0; x < grid_height; x++) {
+		for (int y = 0; y < grid_width; y++) {
+			if (gridmap[x][y] != 0) {
+				vect.push_back(point(x*delta_x_, y*delta_y_, 0));
+			}
+		}
+	}
+
+	return vect;
+}

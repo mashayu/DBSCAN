@@ -159,11 +159,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Clustering.h" />
     <ClInclude Include="ProbMap.h" />
     <ClInclude Include="Funcs.h" />
     <ClInclude Include="MyStructs.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Clustering.cpp" />
     <ClCompile Include="DBSCAN.cpp" />
     <ClCompile Include="ProbMap.cpp" />
     <ClCompile Include="Funcs.cpp" />

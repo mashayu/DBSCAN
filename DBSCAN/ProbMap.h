@@ -1,5 +1,6 @@
 #pragma once
 #include "MyStructs.h"
+#include "Clustering.h"
 #include <vector>
 #include <algorithm>
 struct R_t2
@@ -43,5 +44,7 @@ public:
 	void print(ofstream& myfile);
 
 	inline double log_prob(R_t2 target); 
+
+	vector<point> make_list_of_points();
 
 };
