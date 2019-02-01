@@ -40,5 +40,11 @@
     <Text Include="example.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
+    <Text Include="example2.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="polar.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
   </ItemGroup>
 </Project>

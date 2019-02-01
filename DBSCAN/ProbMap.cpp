@@ -26,12 +26,20 @@ void ProbMap::fill_target_list(vector<R_t> targs) {
 			int x_cell = int(temp_x);
 			int y_cell = int(temp_y);
 
-			if (temp_x - x_cell > 0.5)
+			if (temp_x - x_cell > 0.5) 
 				x_cell += 1;
-
-			if (temp_y - y_cell > 0.5)
-				y_cell += 1;
+				
 			
+
+			if (abs(temp_y - y_cell) > 0.5) {
+				if (temp_y > 0)
+					y_cell += 1;
+				else
+					y_cell -= 1;
+			}
+				
+			y_cell += this->width / 2;
+		
 			// look for the targets that contribute to one cell
 			it2 = std::find_if(target_list.begin(), target_list.end(), 
 				find_id(make_pair(x_cell, y_cell)));

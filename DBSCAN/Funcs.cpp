@@ -17,7 +17,9 @@ void compensation(vector <R_t>&R, float d_N) {
 	vector<R_t>::iterator it;
 	for (it = R.begin(); it != R.end(); it++){
 		double d = sqrt(pow(it->x, 2) + pow(it->y, 2));
-		it->A = it->A - 40 * log(d / d_N);
+		if (d == 0)												// ???????
+			d = 0.001;
+		it->A = it->A - 40 * log10(d / d_N);
 	}
 }
 
