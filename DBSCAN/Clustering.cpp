@@ -71,14 +71,15 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include <vector>
 #include <ctime>
 #include <cstdlib>
 #include <limits>
 #include <cmath>
 #include <stack>
-
 #include "Clustering.h"
+
+using namespace std;
+
 
 float stringToFloat(string i) {
 	stringstream sf;

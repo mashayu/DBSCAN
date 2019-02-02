@@ -11,7 +11,8 @@ public:
 	vector<int> corepts;
 	int visited = 0;
 	point() {}
-	point(float a, float b, int c) {
+
+	point(float a, float b, int c = 1){
 		x = a;
 		y = b;
 		cluster = c;
@@ -19,3 +20,5 @@ public:
 };
 
 void clustering(vector<point> dataset, float Eps, int MinPts);
+
+vector<point> openFile(const char* dataset);

@@ -171,9 +171,14 @@
     <ClCompile Include="Funcs.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="clustering3.txt" />
+    <Text Include="coord.txt" />
     <Text Include="example.txt" />
     <Text Include="example2.txt" />
+    <Text Include="grid_coord.txt" />
+    <Text Include="grid_coord_commas.txt" />
     <Text Include="polar.txt" />
+    <Text Include="scene_1_all_mod.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -26,8 +26,12 @@ void ProbMap::fill_target_list(vector<R_t> targs) {
 			int x_cell = int(temp_x);
 			int y_cell = int(temp_y);
 
-			if (temp_x - x_cell > 0.5) 
-				x_cell += 1;
+			if (abs(temp_x - x_cell) > 0.5) {
+				if (temp_x > 0)
+					x_cell += 1;
+				else
+					x_cell -= 1;
+			}
 				
 			
 
@@ -39,6 +43,7 @@ void ProbMap::fill_target_list(vector<R_t> targs) {
 			}
 				
 			y_cell += this->width / 2;
+			x_cell += this->height / 2;
 		
 			// look for the targets that contribute to one cell
 			it2 = std::find_if(target_list.begin(), target_list.end(), 
@@ -85,23 +90,27 @@ inline double ProbMap::log_prob(R_t2 target) {  // TODO: what if A == 1?
 void ProbMap::fill_grid() {
 	vector<R_t2>::iterator it;
 	double x, y;
+	int calc = 0;
 	for (it = target_list.begin(); it != target_list.end(); ++it) {
+		cout << calc++;
 		x = it->c.first;
 		y = it->c.second;
 		gridmap[x][y] = k * gridmap[x][y] + log_prob(*it) - l0;
-		cout << gridmap[x][y]<<endl;
+		//cout << gridmap[x][y]<<endl;
 	}
 }
 
 vector<point> ProbMap::make_list_of_points() {
+	ofstream myfile("grid_coord.txt");
 	vector <point> vect;
+	int cluster = 1;
 	for (int x = 0; x < grid_height; x++) {
 		for (int y = 0; y < grid_width; y++) {
 			if (gridmap[x][y] != 0) {
-				vect.push_back(point(x*delta_x_, y*delta_y_, 0));
+				vect.push_back(point(x*delta_x_, y*delta_y_, cluster++));
+				myfile << x * delta_x_ << "," << y * delta_y_<< endl;
 			}
 		}
 	}
-
 	return vect;
 }
