@@ -3,9 +3,11 @@
 using namespace std;
 struct R_t
 {
+	int id;
 	double x;
 	double y;
-
+	double z;
+	double snr;
 	double A;
 	//double velocity;
 	//double timeStamp;

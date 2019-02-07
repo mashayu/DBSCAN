@@ -173,6 +173,7 @@
   <ItemGroup>
     <Text Include="clustering3.txt" />
     <Text Include="coord.txt" />
+    <Text Include="data1second.txt" />
     <Text Include="example.txt" />
     <Text Include="example2.txt" />
     <Text Include="grid_coord.txt" />

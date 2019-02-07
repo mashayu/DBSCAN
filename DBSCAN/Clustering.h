@@ -19,6 +19,10 @@ public:
 	}
 };
 
-void clustering(vector<point> dataset, float Eps, int MinPts);
+float stringToFloat(string i);
+
+vector<point> clustering(vector<point> dataset, float Eps, int MinPts);
 
 vector<point> openFile(const char* dataset);
+
+vector<point> noiseRemoval(vector<point>clusteredData);

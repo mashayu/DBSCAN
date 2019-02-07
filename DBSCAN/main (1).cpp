@@ -1,87 +1,34 @@
-//#define _CRT_SECURE_NO_DEPRECATE
-//#include <stdio.h>
-//#include <iostream>
-//#include "dbscan.h"
-//
-//#define MINIMUM_POINTS 4     // minimum number of cluster
-//#define EPSILON (0.75*0.75)  // distance for clustering, metre^2
-//
-//void readBenchmarkData(vector<Point>& points)
-//{
-//	// load point cloud
-//	FILE *stream;
-//	stream = fopen("vfvf.txt", "r");
-//
-//	unsigned int minpts, num_points, cluster, i = 0;
-//	double epsilon;
-//	fscanf(stream, "%u\n", &num_points);
-//
-//	Point *p = (Point *)calloc(num_points, sizeof(Point));
-//
-//	while (i < num_points)
-//	{
-//		fscanf(stream, "%f,%f,%f,%d\n", &(p[i].x), &(p[i].y), &(p[i].z), &cluster);
-//		p[i].clusterID = UNCLASSIFIED;
-//		points.push_back(p[i]);
-//		++i;
-//	}
-//
-//	free(p);
-//	fclose(stream);
-//}
-//
-//void printResults(vector<Point>& points, int num_points)
-//{
-//	int i = 0;
-//	printf("Number of points: %u\n"
-//		" x     y     z     cluster_id\n"
-//		"-----------------------------\n"
-//		, num_points);
-//	while (i < num_points)
-//	{
-//		printf("%5.2lf %5.2lf %5.2lf: %d\n",
-//			points[i].x,
-//			points[i].y, points[i].z,
-//			points[i].clusterID);
-//		++i;
-//	}
-//}
-//
-//int main()
-//{
-//	vector<Point> points;
-//
-//	// read point data
-//	readBenchmarkData(points);
-//
-//	// constructor
-//	DBSCAN ds(MINIMUM_POINTS, EPSILON, points);
-//
-//	// main loop
-//	ds.run();
-//
-//	// result of DBSCAN algorithm
-//	printResults(ds.m_points, ds.getTotalPointSize());
-//	cin.get();
-//	return 0;
-//}
-
-
-
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <vector>
 #include <ctime>
 #include <cstdlib>
 #include <limits>
 #include <cmath>
 #include <stack>
+#include <bits/stdc++.h>
 #include <algorithm>
-#include "Clustering.h"
+#include <string>
+#include <cctype>
 
 using namespace std;
-
-
+class point {
+public:
+	float x;
+	float y;
+	int cluster = 0;
+	int pointType = 1;//1 noise 2 border 3 core
+	int pts = 0;//points in MinPts 
+	vector<int> corepts;
+	int visited = 0;
+	point() {}
+	point(float a, float b, int c) {
+		x = a;
+		y = b;
+		cluster = c;
+	}
+};
 float stringToFloat(string i) {
 	stringstream sf;
 	float score = 0;
@@ -114,7 +61,8 @@ vector<point> openFile(const char* dataset) {
 float squareDistance(point a, point b) {
 	return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
 }
-vector<point>  clustering(vector<point> dataset, float Eps, int MinPts) {
+vector<point> DBSCAN(vector<point> dataset, float Eps, int MinPts) {
+	vector<point> results;
 	int len = dataset.size();
 	//calculate pts
 	cout << "calculate pts" << endl;
@@ -176,7 +124,7 @@ vector<point>  clustering(vector<point> dataset, float Eps, int MinPts) {
 	cout << "output" << endl;
 	//output
 	fstream clustering;
-	clustering.open("clustering3.txt", ios::out);
+	clustering.open("clustered_result.txt", ios::out);
 	for (int i = 0;i<len;i++) {
 		if (dataset[i].pointType == 2)
 			clustering << dataset[i].x << "," << dataset[i].y << "," << dataset[i].cluster << "\n";
@@ -187,23 +135,16 @@ vector<point>  clustering(vector<point> dataset, float Eps, int MinPts) {
 	clustering.close();
 	return corePoint;
 }
-/*int main(int argc, char** argv) {
-	vector<point> dataset = openFile("new 1.txt");
-	DBSCAN(dataset, 0.2, 5);
-	cin.get();
-	return 0;
-}*/
 
-
-vector<point> noiseRemoval(vector<point>clusteredData) {
+vector<point> noiseRemoval(vector<point>clusteredData){
 	vector<point> results;
 	vector<int> clusters;
 	vector<int> clusterscopy;
-	for (int i = 0; i < clusteredData.size(); i++) {
+	for(int i = 0; i < clusteredData.size();i++){
 		clusters.push_back(clusteredData[i].cluster);
 	}
 	clusterscopy = clusters;
-	std::sort(clusters.begin(), clusters.end());
+	sort(clusters.begin(), clusters.end());
 	auto last = std::unique(clusters.begin(), clusters.end());
 	clusters.erase(last, clusters.end());
 	// for(int j =0; j< clusters.size(); j++){
@@ -211,18 +152,33 @@ vector<point> noiseRemoval(vector<point>clusteredData) {
 	// 		clusterscopy.erase(remove(clusterscopy.begin(),clusterscopy.end(),clusters[j]),clusterscopy.end());
 	// 	}
 	// }
-	for (int i = 0; i < clusteredData.size(); i++) {
-		for (int j = 0; j < clusters.size(); j++) {
-			if (clusteredData[i].cluster == clusters[j] && count(clusterscopy.begin(), clusterscopy.end(), clusters[j]) > 15) {
+	for(int i = 0; i < clusteredData.size(); i++){
+		for(int j = 0; j < clusters.size();j++){
+			if(clusteredData[i].cluster == clusters[j] && count(clusterscopy.begin(), clusterscopy.end(), clusters[j]) > 15){
 				results.push_back(clusteredData[i]);
 			}
 		}
 	}
 	fstream result;
 	result.open("noise_removed.txt", ios::out);
-	for (int j = 0; j < results.size(); j++) {
+	for(int j = 0; j < results.size(); j++){
 		result << results[j].x << "," << results[j].y << "," << results[j].cluster << "\n";
 	}
 	result.close();
 	return results;
 }
+int main(int argc, char** argv) {
+	// const char *input = argv[1];
+	vector<point> results;
+	vector<point> final_results;
+	// vector<point> dataset = openFile(input);
+	vector<point> dataset = openFile("grid_coord_small.txt");
+	results = DBSCAN(dataset, 2.5, 5);
+	cout << results.size() << endl;
+	final_results = noiseRemoval(results);
+	cout << "Result size" << final_results.size()<< endl;
+	cin.get();
+	return 0;
+}
+
+

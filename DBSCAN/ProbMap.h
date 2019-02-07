@@ -10,6 +10,7 @@ struct R_t2
 	double A;
 	int num;
 
+
 };
 
 struct find_id : std::unary_function<R_t2, bool> {
@@ -30,6 +31,13 @@ private:
 	int mapWidth;
 	vector<vector<double>> gridmap;
 	double l0, k;
+	double vehicle_x_last, vehicle_y_last;
+	double vehicle_x_current, vehicle_y_current;
+
+	int vehicle_x_last_cell, vehicle_y_last_cell;
+	int vehicle_x_current_cell, vehicle_y_current_cell;
+
+	int grid_left, grid_right, grid_up, grid_down;
 
 
 public:

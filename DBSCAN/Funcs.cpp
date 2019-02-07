@@ -53,20 +53,23 @@ void normalization(vector <R_t> &R) {  // TODO: check for negative values
 }
 
 
-pair<double, double> get_vehicle_coords(pair<double, double> coords) {  //TODO: make realistic
+pair<double, double> get_vehicle_coords(pair<double, double> vehicle_coord, double phi, double v) {  //TODO: make realistic
 
 	/* code for coords */ 
 
-	double x = coords.first, y = coords.second;
-	return make_pair(x+0.1, y+0.1);
+	double x = vehicle_coord.first, y = vehicle_coord.second;
+
+	return make_pair(x+v*cos(phi), y+v*sin(phi));
 }
 
-void update_coord(vector <R_t> &targets, pair<double, double> coord) {  // TODO: make realistic
+void update_coord(vector <R_t> &targets, pair<double, double> vehicle_coord, double phi) {  // TODO: make realistic
 
 	vector<R_t>::iterator it;
 	for (it = targets.begin(); it != targets.end(); it++) {
-		it->x += coord.first;
-		it->y += coord.second;
+
+		it->x = cos(phi)*it->x - sin(phi)*it->y + vehicle_coord.first;
+
+		it->y = sin(phi)*it->x + cos(phi)*it->y + vehicle_coord.second;
 	}
 
 }

@@ -67,5 +67,8 @@
     <Text Include="clustering3.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
+    <Text Include="data1second.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
   </ItemGroup>
 </Project>
