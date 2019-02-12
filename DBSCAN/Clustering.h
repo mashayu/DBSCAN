@@ -19,10 +19,24 @@ public:
 	}
 };
 
+
+
+struct BBox
+{
+	double xMin;
+	double xMax;
+	double yMin;
+	double yMax;
+	int cluster;
+};
+
+
 float stringToFloat(string i);
 
 vector<point> clustering(vector<point> dataset, float Eps, int MinPts);
 
 vector<point> openFile(const char* dataset);
 
-vector<point> noiseRemoval(vector<point>clusteredData);
+vector<point> noiseRemoval(vector<point> clusteredData, int threshold);
+
+vector<BBox> boundingBox(vector<point> noisedRemovedResults);

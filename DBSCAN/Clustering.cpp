@@ -1,73 +1,3 @@
-//#define _CRT_SECURE_NO_DEPRECATE
-//#include <stdio.h>
-//#include <iostream>
-//#include "dbscan.h"
-//
-//#define MINIMUM_POINTS 4     // minimum number of cluster
-//#define EPSILON (0.75*0.75)  // distance for clustering, metre^2
-//
-//void readBenchmarkData(vector<Point>& points)
-//{
-//	// load point cloud
-//	FILE *stream;
-//	stream = fopen("vfvf.txt", "r");
-//
-//	unsigned int minpts, num_points, cluster, i = 0;
-//	double epsilon;
-//	fscanf(stream, "%u\n", &num_points);
-//
-//	Point *p = (Point *)calloc(num_points, sizeof(Point));
-//
-//	while (i < num_points)
-//	{
-//		fscanf(stream, "%f,%f,%f,%d\n", &(p[i].x), &(p[i].y), &(p[i].z), &cluster);
-//		p[i].clusterID = UNCLASSIFIED;
-//		points.push_back(p[i]);
-//		++i;
-//	}
-//
-//	free(p);
-//	fclose(stream);
-//}
-//
-//void printResults(vector<Point>& points, int num_points)
-//{
-//	int i = 0;
-//	printf("Number of points: %u\n"
-//		" x     y     z     cluster_id\n"
-//		"-----------------------------\n"
-//		, num_points);
-//	while (i < num_points)
-//	{
-//		printf("%5.2lf %5.2lf %5.2lf: %d\n",
-//			points[i].x,
-//			points[i].y, points[i].z,
-//			points[i].clusterID);
-//		++i;
-//	}
-//}
-//
-//int main()
-//{
-//	vector<Point> points;
-//
-//	// read point data
-//	readBenchmarkData(points);
-//
-//	// constructor
-//	DBSCAN ds(MINIMUM_POINTS, EPSILON, points);
-//
-//	// main loop
-//	ds.run();
-//
-//	// result of DBSCAN algorithm
-//	printResults(ds.m_points, ds.getTotalPointSize());
-//	cin.get();
-//	return 0;
-//}
-
-
-
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -114,7 +44,10 @@ vector<point> openFile(const char* dataset) {
 float squareDistance(point a, point b) {
 	return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
 }
-vector<point>  clustering(vector<point> dataset, float Eps, int MinPts) {
+
+
+
+vector<point>clustering(vector<point> dataset, float Eps, int MinPts) {
 	int len = dataset.size();
 	//calculate pts
 	cout << "calculate pts" << endl;
@@ -195,34 +128,82 @@ vector<point>  clustering(vector<point> dataset, float Eps, int MinPts) {
 }*/
 
 
-vector<point> noiseRemoval(vector<point>clusteredData) {
+vector<point> noiseRemoval(vector<point> clusteredData, int threshold)
+{
 	vector<point> results;
 	vector<int> clusters;
 	vector<int> clusterscopy;
-	for (int i = 0; i < clusteredData.size(); i++) {
+	for (int i = 0; i < clusteredData.size(); i++)
+	{
 		clusters.push_back(clusteredData[i].cluster);
 	}
 	clusterscopy = clusters;
-	std::sort(clusters.begin(), clusters.end());
+	sort(clusters.begin(), clusters.end());
 	auto last = std::unique(clusters.begin(), clusters.end());
 	clusters.erase(last, clusters.end());
-	// for(int j =0; j< clusters.size(); j++){
-	// 	if(count(clusterscopy.begin(), clusterscopy.end(), clusters[j]) < 15){
-	// 		clusterscopy.erase(remove(clusterscopy.begin(),clusterscopy.end(),clusters[j]),clusterscopy.end());
-	// 	}
-	// }
-	for (int i = 0; i < clusteredData.size(); i++) {
-		for (int j = 0; j < clusters.size(); j++) {
-			if (clusteredData[i].cluster == clusters[j] && count(clusterscopy.begin(), clusterscopy.end(), clusters[j]) > 15) {
+
+	for (int i = 0; i < clusteredData.size(); i++)
+	{
+		for (int j = 0; j < clusters.size(); j++)
+		{
+			if (clusteredData[i].cluster == clusters[j] &&
+				count(clusterscopy.begin(), clusterscopy.end(), clusters[j]) > threshold)
+			{
 				results.push_back(clusteredData[i]);
 			}
 		}
 	}
 	fstream result;
-	result.open("noise_removed.txt", ios::out);
-	for (int j = 0; j < results.size(); j++) {
+	result.open("onesecond_clustered_2.txt", ios::out);
+	for (int j = 0; j < results.size(); j++)
+	{
 		result << results[j].x << "," << results[j].y << "," << results[j].cluster << "\n";
 	}
 	result.close();
 	return results;
+}
+
+vector<BBox> boundingBox(vector<point> noisedRemovedResults)
+{
+	vector<BBox> clusteredBoundingBox;
+	vector<int> clusters;
+	vector<double> valX;
+	vector<double> valY;
+
+	for (int i = 0; i < noisedRemovedResults.size(); i++)
+	{
+		clusters.push_back(noisedRemovedResults[i].cluster);
+	}
+	sort(clusters.begin(), clusters.end());
+	auto last = std::unique(clusters.begin(), clusters.end());
+	clusters.erase(last, clusters.end());
+
+	for (int i = 0; i < clusters.size(); i++)
+	{
+		valX.clear();
+		valY.clear();
+		for (int j = 0; j < noisedRemovedResults.size(); j++)
+		{
+			if (noisedRemovedResults[j].cluster == clusters[i])
+			{
+				valX.push_back(noisedRemovedResults[j].x);
+				valY.push_back(noisedRemovedResults[j].y);
+			}
+		}
+		sort(valX.begin(), valX.end());
+		sort(valY.begin(), valY.end());
+		int sizeX = valX.size();
+		int sizeY = valY.size();
+
+		cout << "Min X: " << valX[0] << "& Max X: " << valX[sizeX - 1] << endl;
+		cout << "Min Y: " << valY[0] << "& Max Y: " << valY[sizeY - 1] << endl;
+
+		clusteredBoundingBox.push_back(BBox());
+		clusteredBoundingBox[i].xMin = valX[0];
+		clusteredBoundingBox[i].xMax = valX[sizeX - 1];
+		clusteredBoundingBox[i].yMin = valY[0];
+		clusteredBoundingBox[i].yMax = valY[sizeY - 1];
+		clusteredBoundingBox[i].cluster = clusters[i];
+	}
+	return clusteredBoundingBox;
 }
